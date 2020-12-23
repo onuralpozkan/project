@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proto</title>
+    <!-- Fontawesome Link  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
+    />
+    <!-- Custom Main Styles -->
+    <link rel="stylesheet" href="./assets/css/mobile_sidebar.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/calendar.css" />
+    <link rel="stylesheet" href="./assets/css/slider.css" />
+    <link rel="stylesheet" href="./assets/css/logpage.css" />
+    <!--React CDN Links-->
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+    <!-- React Router -->
+    <script src="https://unpkg.com/react-router/umd/react-router.min.js"></script>
+    <script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
+
+    <!-- Load Babel -->
+    <!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      // React Router Setup
+      const Router = window.ReactRouterDOM.BrowserRouter;
+      const Route = window.ReactRouterDOM.Route;
+      const Link = window.ReactRouterDOM.Link;
+      const Switch = window.ReactRouterDOM.Switch;
+      const Redirect = window.ReactRouterDOM.Redirect;
+      //Show More Link Component
+      const ShowMore = ({ show_more_link }) => {
+        return (
+          <div className="show-more">
+            <Link to={show_more_link} className="show-more-link">
+              Daha Fazlası <i className="fas fa-caret-down"></i>
+            </Link>
+          </div>
+        );
+      };
+      // Sidelink Button Format
+      const Sidelink = ({ btn_text, href, mobile_class }) => {
+        return (
+          <li className={`${mobile_class}link-item`}>
+            <span className={`${mobile_class}arrow-icon`}>
+              <img src="assets/img/play_arrow-right@2x.png" alt="Play Right" />
+            </span>
+            <Link to={href} className={`${mobile_class}link`}>
+              {btn_text}
+            </Link>
+          </li>
+        );
+      };
+      // Button Links in Array, add new Button by adding new obj
+      const sidelinks = [
+        { btnText: "Lintera Hakkında", href: "#" },
+        { btnText: "Zaman Girişi", href: "#" },
+        { btnText: "İzinlerim", href: "#" },
+        { btnText: "Bilgi Bankası", href: "#" },
+        { btnText: "ArGe Portalı", href: "#" },
+        { btnText: "Mesajlar", href: "#" },
+        { btnText: "Yardım", href: "#" },
+        { btnText: "WorkLogs", href: "worklogs" },
+      ];
+      // Sidebar Component
+      const Sidebar = ({ mobile }) => {
+        const history = ReactRouterDOM.useHistory();
+        const { isOpen, setIsOpen,employeeData } = React.useContext(DataContext);
+       
+        const returnHome = () => {
+          history.push("/");
+        };
+        const handleMobileMenu = () => {
+          const mobile_menu = document.querySelector(".mobile-side-container");
+          mobile_menu.style.opacity = isOpen ? 0 : 1;
+          mobile_menu.style.zIndex = isOpen ? -1 : 5;
+          mobile_menu.style.transition = "opacity .2s ease-in";
+          setIsOpen(prevState => !prevState)
+        };
+        window.addEventListener('resize',()=>{
+          setIsOpen(false)
+          const mobile_menu = document.querySelector(".mobile-side-container");
+          mobile_menu.style.opacity = isOpen ? 1 : 0;
+          mobile_menu.style.zIndex = isOpen ? 5 : -1;
+          mobile_menu.style.transition = "opacity .2s ease-in";
+          
+        })
+        const mobile_class = mobile ? "mobile-" : "";
+        return (
+          <div
+            className={`${mobile_class}side-container`}
+            onClick={handleMobileMenu}
+          >
+            <div className={`${mobile_class}nav-container`}>
+              <div
+                className={`${mobile_class}logo`}
+                onClick={returnHome}
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src="assets/img/logo@2x.png"
+                  alt="Firm Logo"
+                  className={`${mobile_class}logo-img`}
+                />
+              </div>
+              <div className={`${mobile_class}profile-photo`}>
+                <img
+                  src="assets/img/profil_1.png"
+                  alt="Profil Fotosu"
+                  className={`${mobile_class}profile-img`}
+                />
+              </div>
+              <div className={`${mobile_class}profile-info-container`}>
+                <h1 className={`${mobile_class}profile-title`}>
+                  Ignacio Shyre
+                </h1>
+                <p className={`${mobile_class}profile-info`}>
+                  Software Engineer
+                </p>
+              </div>
+              <div className={`${mobile_class}link-container`}>
+                <ul className={`${mobile_class}link-list`}>
+                  {sidelinks.map((i, index) => (
+                    <Sidelink
+                      btn_text={i.btnText}
+                      href={i.href}
+                      key={index}
+                      mobile_class={mobile_class}
+                    />
+                  ))}
+                </ul>
+              </div>
+              <div className={`${mobile_class}exit-container`}>
+                <button className={`${mobile_class}exit-btn`}>Çıkış</button>
+              </div>
+            </div>
+          </div>
+        );
+      };
+     
+      // Header Part of Main Component
+      const Header = () => {
+        const { setIsOpen, isOpen } = React.useContext(DataContext);
+        
+        const handleMobileMenu = () => {
+          const mobile_menu = document.querySelector(".mobile-side-container");
+          mobile_menu.style.opacity = isOpen ? 0 : 1;
+          mobile_menu.style.zIndex = isOpen ? -1 : 5;
+          mobile_menu.style.transition = "all .2s ease-in";
+          setIsOpen(prevState => !prevState)
+        };
+
+        const history = ReactRouterDOM.useHistory();
+        const returnHome = () => {
+          history.push("/");
+        };
+
+        return (
+          <div className="header-container">
+            <div className="header-header">
+              <h1
+                className="header-title"
+                onClick={returnHome}
+                style={{ cursor: "pointer" }}
+              >
+                Ignacio, Hoşgeldin
+              </h1>
+            </div>
+            <div className="header-search-bar center-item">
+              <input
+                type="search"
+                name="search-box"
+                id="search-box"
+                className="search-input"
+              />
+              <i className="fas fa-search search-icon"></i>
+            </div>
+            <div
+              className="header-mobile-menu center-item"
+              onClick={handleMobileMenu}
+            >
+              <i className={`fas fa-${isOpen ? "times" : "bars"}`}></i>
+            </div>
+          </div>
+        );
+      };
+      // Slider Component
+      const Slider = () => {
+        const big_img = window.innerWidth > 1800 ? '@2x' : '';
+        const imageUrls = [
+          `assets/img/slide_1${big_img}.png`,
+          `assets/img/slide_2${big_img}.png`,
+          `assets/img/slide_3${big_img}.png`,
+          `assets/img/slide_4${big_img}.png`,
+         
+        ];
+        const imgCounts = imageUrls.length;
+        const [imgIndex, setImgIndex] = React.useState(0);
+        const dots = [];
+        const changeImg = (n) => {
+          setImgIndex((state) =>
+            state + n < 0
+              ? imgCounts - 1
+              : state + n > imgCounts - 1
+              ? 0
+              : state + n
+          );
+        };
+        for (let i = 0; i < imgCounts; i++) {
+          dots.push("dot-");
+        }
+        return (
+          <div className="section-content">
+            <div className="slide-container">
+              <img
+                src={imageUrls[imgIndex]}
+                alt={`Duyuru-${imgIndex}`}
+                title={`Duyuru-${imgIndex}`}
+              />
+              <div
+                className="left-arrow center-item"
+                onClick={() => changeImg(-1)}
+              >
+                <i className="fas fa-chevron-left"></i>
+              </div>
+              <div
+                className="right-arrow center-item"
+                onClick={() => changeImg(1)}
+              >
+                <i className="fas fa-chevron-right"></i>
+              </div>
+              <div className="dots">
+                {dots.map((i, index) => (
+                  <div
+                    key={index}
+                    className={i + (index === imgIndex ? "full" : "empty")}
+                    id="single-dot"
+                  ></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      };
+      // Section 1 : Slider;
+      const Section1 = () => {
+        return (
+          <section className="section-container section-1">
+            <div className="section-header">
+              <h2 className="section-title">Duyurular</h2>
+            </div>
+            <Slider />
+          </section>
+        );
+      };
+      //Singel Person Format
+      const Person = ({
+        person_name,
+        person_mail,
+        person_img_url,
+        isBirth,
+      }) => {
+        return (
+          <div className="person-container">
+            <div className="avatar-container">
+              <img src={person_img_url} alt="Avatar" />
+            </div>
+            <div className="info-container">
+              <p className="person-name">{person_name}</p>
+              <p className="person-mail">{person_mail}</p>
+              {isBirth ? (
+                <div className="person-text-container">
+                  <p className="text">"Doğum Günü Kutlayın..."</p>
+                  <span>
+                    <img
+                      className="sendicon"
+                      src="assets/img/send-icon@2x.png"
+                      height="32px"
+                      alt="Send Icon"
+                    />
+                  </span>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        );
+      };
+      // Birthday Section Format
+      const Section2 = ({ whole_data = false }) => {
+        const { employeeData } = React.useContext(DataContext);
+        const today = new Date();
+        // Filter employees whose birthday is today
+        const isBirthday = employeeData.filter((person) => {
+          const personBirthDay = new Date(person.birthday);
+          if (
+            today.getDate() == personBirthDay.getDate() &&
+            today.getMonth() == personBirthDay.getMonth()
+          )
+            return person;
+        });
+        // Map Birthday people
+        const birthPeople = isBirthday
+          .slice(0, whole_data ? isBirthday.length : 4)
+          .map((i, index) => (
+            <Person
+              person_name={i.first_name + " " + i.last_name}
+              person_mail={i.email}
+              person_img_url={i.avatar}
+              isBirth={true}
+              key={index}
+            />
+          ));
+        return (
+          <section
+            className="section-container section-2"
+            style={whole_data ? { marginTop: "20px" } : null}
+          >
+            <div className="section-header">
+              <h2
+                className="section-title"
+                style={
+                  whole_data ? { textAlign: "center", padding: "20px" } : null
+                }
+              >
+                Doğum Günleri
+              </h2>
+            </div>
+            {/*If more than 4 people born today, then it will show more button*/}
+            {birthPeople.length > 4 && !whole_data ? (
+              <>
+                <div
+                  className="section-content"
+                  style={
+                    whole_data
+                      ? {
+                          display: "grid",
+                          gridTemplateColumns:
+                            "repeat(auto-fit,minmax(240px,1fr))",
+                          padding: "0 5px",
+                        }
+                      : null
+                  }
+                >
+                  {birthPeople}
+                </div>
+                <ShowMore show_more_link="birthdaypage" />
+              </>
+            ) : (
+              <div className="section-content">
+                <p className="empty-text">Bugün Doğan Kimse Yok!</p>
+              </div>
+            )}
+          </section>
+        );
+      };
+      //Open Job Links Format
+      const Joblink = ({ job_id, job_title, all_jobs }) => {
+        return (
+          <React.Fragment>
+            <li className="jobs-list-item">
+              {all_jobs ? `${job_id}. ` : null}
+              <Link to={"/openjobs/" + job_id} className="job-link">
+                {job_title}
+              </Link>
+              <hr />
+            </li>
+          </React.Fragment>
+        );
+      };
+      // Job Links Component
+      const OpenJobs = ({ whole_data = false }) => {
+        const { jobsData } = React.useContext(DataContext);
+        return (
+          <div className="section-content">
+            <div className={whole_data ? "jobs-all" : "jobs-container"}>
+              <div
+                className="jobs-title"
+                style={
+                  whole_data ? { textAlign: "center", padding: "20px" } : null
+                }
+              >
+                <h2>Açık Pozisyonlar</h2>
+              </div>
+              <div className="jobs">
+                <ul className="jobs-list">
+                  {jobsData
+                    .slice(0, whole_data ? jobsData.length : 4)
+                    .map((i) => (
+                      <Joblink
+                        job_id={i.id}
+                        job_title={i.title}
+                        key={i.id}
+                        all_jobs={whole_data}
+                      />
+                    ))}
+                </ul>
+              </div>
+            </div>
+            {jobsData.length > 4 && !whole_data ? (
+              <ShowMore show_more_link="openjobs" />
+            ) : null}
+          </div>
+        );
+      };
+      // Ads Format
+      const Advertisement = ({
+        ad_img_url,
+        ad_img_alt,
+        ad_title,
+        ad_close,
+        ad_link_id,
+        ad_whole_data,
+      }) => {
+        return (
+          <Link to={"/advertisements/" + ad_link_id} className="ad-link">
+            <div className={ad_whole_data ? "single-ad-img" : "ads-image"}>
+              <img
+                src={ad_img_url}
+                alt={`İlan No:${ad_img_alt}`}
+                title={ad_title}
+              />
+
+              {ad_whole_data ? (
+                <div>
+                  <h2>{ad_title}</h2>
+                </div>
+              ) : null}
+            </div>
+          </Link>
+        );
+      };
+      // Advertisment Links Component
+      const Adverts = ({ whole_data = false }) => {
+        const { adsData } = React.useContext(DataContext);
+        return (
+          <div className="section-content" style={whole_data ? { marginTop: "20px" } : null}>
+            <div className="ads-container">
+              <div
+                className="ads-title"
+                style={
+                  whole_data ? { textAlign: "center", padding: "20px" } : null
+                }
+              >
+                <h2>İlanlar</h2>
+              </div>
+              <div className={whole_data ? "ads-page" : "ads-image-container"}>
+                {adsData.slice(0, whole_data ? adsData.length : 2).map((i) => (
+                  <Advertisement
+                    ad_img_url={
+                      parseInt(i.id) % 2 === 1
+                        ? "assets/img/sadad.png"
+                        : "assets/img/sadasd.png"
+                    }
+                    ad_img_alt={i.id}
+                    ad_title={i.title}
+                    ad_link_id={i.id}
+                    ad_whole_data={whole_data}
+                    key={i.id}
+                  />
+                ))}
+              </div>
+            </div>
+            {adsData.length > 4 && !whole_data ? (
+              <ShowMore show_more_link="advertisements" />
+            ) : null}
+          </div>
+        );
+      };
+      // Right Section of Content Component (.article-container) //
+      // Section 3 consists of Calendar, Job Links, Ads
+      const Section3 = () => {
+        return (
+          <section className="section-container section-3">
+            <div className="section-content">
+              <Calendar />
+            </div>
+            <OpenJobs />
+            <Adverts />
+          </section>
+        );
+      };
+      // Single News Format
+      const NewsItem = ({
+        news_img_url,
+        news_img_alt,
+        news_description,
+        news_title,
+        news_id,
+      }) => {
+        const history = ReactRouterDOM.useHistory();
+
+        const handleNews = () => {
+          history.push(`/news/${news_id}`);
+        };
+        return (
+          <div className="news-item" onClick={handleNews}>
+            <div className="news-img">
+              <img src={news_img_url} alt={news_img_alt} />
+            </div>
+            <div className="news-text">
+              <h6 className="news-title">{news_title}</h6>
+              <p className="news-description">{news_description}</p>
+            </div>
+          </div>
+        );
+      };
+      // News Section
+      const Section4 = ({ whole_data = false }) => {
+        const { newsData } = React.useContext(DataContext);
+
+        const newsSortedByTime = newsData.sort((a, b) => b.date > a.date);
+
+        const text_truncate = function (str, length = 50, ending = "...") {
+          if (str.length > length) {
+            return str.substring(0, length) + ending;
+          } else {
+            return str;
+          }
+        };
+        return (
+          <section
+            className="section-container section-4"
+            style={whole_data ? { marginTop: "20px" } : null}
+          >
+            <div className="section-header">
+              <h2
+                className="section-title"
+                style={
+                  whole_data ? { textAlign: "center", padding: "20px" } : null
+                }
+              >
+                Haberler
+              </h2>
+            </div>
+            <div className="section-content">
+              <div className="news-container">
+                {newsSortedByTime
+                  .slice(0, whole_data ? newsSortedByTime.length : 4)
+                  .map((i, index) => (
+                    <NewsItem
+                      news_img_alt={i.title}
+                      news_img_url={`assets/img/${
+                        (parseInt(i.id) % 4) + 1
+                      }.png`}
+                      news_title={i.title}
+                      news_description={text_truncate(i.description)}
+                      news_id={i.id}
+                      key={i.id}
+                    />
+                  ))}
+              </div>
+            </div>
+            {newsSortedByTime.length > 4 && !whole_data ? (
+              <ShowMore show_more_link="news" />
+            ) : null}
+          </section>
+        );
+      };
+      // New Recruits Format
+      const Section5 = ({ whole_data = false }) => {
+        const { employeeData } = React.useContext(DataContext);
+        const today = new Date();
+        // Ger employee who joined in a year
+        var newRecruits = employeeData.filter((person) => {
+          const startDate = new Date(person.start_date_of_employement);
+          if (startDate.getFullYear() >= today.getFullYear() - 1) return person;
+        });
+        // Sorting employees by their first name alphabetically and showing only first four
+        const recentRecruits = newRecruits
+          .sort((a, b) => {
+            let fa = a.first_name.toLowerCase(),
+              fb = b.first_name.toLowerCase();
+            if (fb > fa) return -1;
+            else if (fa > fb) return 1;
+            return 0;
+          })
+          .slice(0, whole_data ? newRecruits.length : 4)
+          .map((i, index) => (
+            <Person
+              person_name={i.first_name + " " + i.last_name}
+              person_mail={i.email}
+              person_img_url={i.avatar}
+              isBirth={false}
+              key={index}
+            />
+          ));
+        return (
+          <section
+            className="section-container section-5"
+            style={whole_data ? { marginTop: "20px" } : null}
+          >
+            <div className="section-header">
+              <h2
+                className="section-title"
+                style={
+                  whole_data ? { textAlign: "center", padding: "20px" } : null
+                }
+              >
+                Aramıza Katılanlar
+              </h2>
+            </div>
+            <div
+              className="section-content"
+              style={
+                whole_data
+                  ? {
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
+                      padding: "0 5px",
+                    }
+                  : null
+              }
+            >
+              {recentRecruits}
+            </div>
+            {newRecruits.length >= 4 && !whole_data ? (
+              <ShowMore
+                show_more_link="newrecruitspage"
+                link_data={newRecruits}
+              />
+            ) : null}
+          </section>
+        );
+      };
+      // Generic Section Format
+      const GenericSection = ({ section_title, cls_name }) => {
+        return (
+          <section className={`section-container ${cls_name}`}>
+            <div className="section-header">
+              <h2 className="section-title">{section_title}</h2>
+            </div>
+            <div className="section-content"></div>
+          </section>
+        );
+      };
+      // Dummy Generic Section's Data
+      const genericSectionData = [
+        { section_title: "Telefon Rehberi", cls_name: "section-6" },
+        { section_title: "Dökümanlar", cls_name: "section-7" },
+        { section_title: "Geri Dönüş", cls_name: "section-8" },
+        { section_title: "Masraf Bildirimi", cls_name: "section-9" },
+      ];
+      const Content = () => {
+        return (
+          <div className="article-container">
+            <Section1 />
+            <Section2 />
+            <Section3 />
+            <Section4 />
+            <Section5 />
+            {genericSectionData.map((i, index) => (
+              <GenericSection
+                key={index}
+                cls_name={i.cls_name}
+                section_title={i.section_title}
+              />
+            ))}
+          </div>
+        );
+      };
+      // Singe News Page
+      const SingleNews = () => {
+        const { newsData } = React.useContext(DataContext);
+        const { id } = ReactRouterDOM.useParams();
+        const single_news = newsData.filter((i) => i.id === Number(id));
+        return (
+          <div>
+            {single_news.map((i) => (
+              <div className="single-news-container">
+                <h1
+                  className="single-news-title"
+                  style={{ textTransform: "uppercase", textAlign: "center" }}
+                >
+                  {i.title}
+                </h1>
+                <div className="single-news-img">
+                  <img
+                    src={`assets/img/${(parseInt(i.id) % 4) + 1}@2x.png`}
+                    alt={i.title}
+                    title={i.title}
+                  />
+                </div>
+                <div className="single-news-text">
+                  <p className="single-news-description">{i.description}</p>
+                  <p>
+                    <span>Yazar:</span> {i.author}
+                  </p>
+                  <p>
+                    <span>Tarih:</span> {i.date}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      };
+      // Singe Ad Page
+      const SingleAd = () => {
+        const { adsData } = React.useContext(DataContext);
+        const { id } = ReactRouterDOM.useParams();
+        const single_ad = adsData.filter((i) => i.id === Number(id));
+
+        return (
+          <div className="single-ad-container">
+            {single_ad.map((i) => (
+              <div className="single-ad">
+                <h1>{i.title}</h1>
+                <img
+                  src={
+                    parseInt(i.id) % 2 === 1
+                      ? "assets/img/sadad.png"
+                      : "assets/img/sadasd.png"
+                  }
+                  alt={`İlan NO:${i.id}`}
+                />
+                <p>
+                  <span>Açıklama: </span>
+                  {i.description}
+                </p>
+                <p>
+                  <span>Miktar: </span>
+                  {i.amount}
+                </p>
+                <p>
+                  <span>İlan Sahibi: </span>
+                  {i.employee_name}
+                </p>
+                <p>
+                  <span>İlan Linki: </span>
+                  <a href={i.url}>Tıkla</a>
+                </p>
+                <p>
+                  <span>Oluşturulma Tarihi: </span>
+                  {i.create_date}
+                </p>
+              </div>
+            ))}
+          </div>
+        );
+      };
+      //Single Job Page
+      const SingleJob = () => {
+        const { id } = ReactRouterDOM.useParams();
+        const { jobsData } = React.useContext(DataContext);
+
+        const open_job = jobsData.filter((i) => i.id === Number(id));
+        return (
+          <div className="single-job-container">
+            {open_job.map((i) => (
+              <div className="single-job">
+                <h2>{i.title}</h2>
+                <p>
+                  <span>Link: </span>
+                  <a href={i.link}>İş İlanına Gitmek İçin Tıkla</a>
+                </p>
+                <p>
+                  <span>İlan Başlangıç Tarihi: </span> {i.start_date}
+                </p>
+                <p>
+                  <span>İlan Son Tarihi: </span> {i.end_date}
+                </p>
+              </div>
+            ))}
+          </div>
+        );
+      };
+
+      // Main Container one of app-container child
+      const Main = () => {
+        return (
+          <div className="main-container">
+            <Header />
+
+            <Switch>
+              <Route exact path="/">
+                <Content />
+              </Route>
+              <Route
+                exact
+                path="/newrecruitspage"
+                render={() => <Section5 whole_data={true} />}
+              />
+              <Route
+                exact
+                path="/news"
+                render={() => <Section4 whole_data={true} />}
+              />
+              <Route
+                exact
+                path="/birthdaypage"
+                render={() => <Section2 whole_data={true} />}
+              />
+              <Route
+                exact
+                path="/advertisements"
+                render={() => <Adverts whole_data={true} />}
+              />
+              <Route
+                exact
+                path="/openjobs"
+                render={() => <OpenJobs whole_data={true} />}
+              />
+              <Route
+                exact
+                path="/advertisements/:id"
+                render={() => <SingleAd />}
+              />
+              <Route exact path="/news/:id" render={() => <SingleNews />} />
+              <Route exact path="/openjobs/:id" render={() => <SingleJob />} />
+              <Route path="/worklogs" render={() => <WorkLogs />} />
+            </Switch>
+          </div>
+        );
+      };
+
+      const WorkLogs = () => {
+        const { workLogsData } = React.useContext(DataContext);
+        const { employeeData } = React.useContext(DataContext);
+
+        const [employeeId, setEmployeeId] = React.useState();
+        const [projectId, setProjectId] = React.useState();
+        const [projectDate, setProjectDate] = React.useState();
+
+        const [projectWorkers, setProjectWorkers] = React.useState();
+        // Make new array, consist of employee ids from log data
+        const workerUID = workLogsData.map((i) => i.employee_id);
+        // Remove duplicate ids from array
+        const filteredWorkerUID = workerUID
+          .filter((i, index) => workerUID.indexOf(i) === index)
+          .sort();
+
+        // Make new array from employee data by filtering ids acc to filtered log data ids
+        const select_employee = employeeData.filter((employee) => {
+          for (let i = 0; i < filteredWorkerUID.length; i++) {
+            if (filteredWorkerUID[i] === employee.id) {
+              return employee;
+            }
+          }
+        });
+        // Getting Projects from log data by employee ids selected from form
+        const projects_by_ids = workLogsData
+          .filter((i) => i.employee_id === Number(employeeId))
+          .sort((a, b) => b.project_id < a.project_id);
+        // Make new Array with only project ids
+        const projects_only_ids_arr = projects_by_ids.map((i) => i.project_id);
+        // Remove duplicates from project ids array
+        const project_unique_ids = projects_only_ids_arr.filter(
+          (i, index) => projects_only_ids_arr.indexOf(i) === index
+        );
+
+        return (
+          <div className="log-main-container">
+            <div className="log-title-container">
+              <h1 className="log-title">Work Logs</h1>
+            </div>
+            <div className="log-sub-container">
+              <div className="log-employee-container">
+                <select
+                  name="log_employee"
+                  value={employeeId}
+                  onChange={(e) => setEmployeeId(e.target.value)}
+                >
+                  <option>Lütfen Bir Kişi Seçin...</option>
+                  {select_employee.map((i) => (
+                    <option
+                      value={i.id}
+                      key={i.id}
+                    >{`${i.first_name} ${i.last_name}`}</option>
+                  ))}
+                </select>
+                <select
+                  style={employeeId ? null : { display: "none" }}
+                  name="log_employee_project"
+                  value={projectId}
+                  onChange={(e) => setProjectId(e.target.value)}
+                >
+                  <option>Lütfen Proje Numarasını Seçin...</option>
+                  {project_unique_ids.map((i) => (
+                    <option value={i} key={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  style={employeeId && projectId ? null : { display: "none" }}
+                  name="log_employee_date"
+                  value={projectDate}
+                  onChange={(e) => setProjectDate(e.target.value)}
+                >
+                  <option>Lütfen Tarih Seçin...</option>
+                  {workLogsData
+                    .filter(
+                      (i) =>
+                        i.employee_id === Number(employeeId) &&
+                        i.project_id === Number(projectId)
+                    )
+                    .sort((a, b) => a.date < b.date)
+                    .map((i) => (
+                      <option value={i.date} key={i.id}>
+                        {i.date}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="log-info-container">
+                <table className="log-table">
+                  <thead>
+                    <tr>
+                      <th colSpan="2">
+                        {projectDate
+                          ? `${projectId} Nolu Proje Günlüğü`
+                          : "Lütfen Gerekli Alanları Seçiniz"}
+                      </th>
+                    </tr>
+                  </thead>
+
+                  {workLogsData
+                    .filter(
+                      (i) =>
+                        i.employee_id === Number(employeeId) &&
+                        i.project_id === Number(projectId) &&
+                        i.date == projectDate
+                    )
+                    .map((i) => (
+                      <tbody key={i.id}>
+                        <tr>
+                          <td>Project No:</td>
+                          <td>{i.project_id}</td>
+                        </tr>
+                        <tr>
+                          <td>Açıklama: </td>
+                          <td>{i.description}</td>
+                        </tr>
+                        <tr>
+                          <td>Erişim Tarihi:</td>
+                          <td>{i.date}</td>
+                        </tr>
+                        <tr>
+                          <td>Total Saat:</td>
+                          <td>{i.hours}</td>
+                        </tr>
+                      </tbody>
+                    ))}
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // App General Container
+      const App = () => {
+        return (
+          <ReactRouterDOM.HashRouter>
+            <div className="app-container">
+              <Sidebar mobile={false} />
+              <Main />
+              <Sidebar mobile={true} />
+            </div>
+          </ReactRouterDOM.HashRouter>
+        );
+      };
+
+      /******************************************************************/
+      /******************** Calendar Component **************************/
+
+      const Calendar = () => {
+        const today = new Date();
+        const [month, setMonth] = React.useState(today.getMonth());
+        const [year, setYear] = React.useState(today.getFullYear());
+        const [day, setDay] = React.useState(today.getDate());
+        const daysInCalendar = [];
+
+        const months = [
+          "Ocak",
+          "Şubat",
+          "Mart",
+          "Nisan",
+          "Mayıs",
+          "Haziran",
+          "Temmuz",
+          "Ağustos",
+          "Eylül",
+          "Ekim",
+          "Kasım",
+          "Aralık",
+        ];
+        const days = ["Pz", "Pt", "Sa", "Çr", "Pr", "Cu", "Ct"];
+
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Control Month; n = +1 or -1; m1 & m2 month boundaries;
+        const changeMonth = (n, m1, m2) => {
+          setMonth((prevState) => {
+            if (prevState === m1) {
+              setYear((prevState) => prevState + n);
+              return m2;
+            } else {
+              return prevState + n;
+            }
+          });
+        };
+        // Days in Relative Month
+        for (
+          let firstDayOfMonth = 1;
+          firstDayOfMonth <= daysInMonth;
+          firstDayOfMonth++
+        ) {
+          daysInCalendar.push(firstDayOfMonth);
+        }
+        return (
+          <div id="css_calendar">
+            <div className="month">
+              <ul>
+                <li
+                  style={{ cursor: "pointer" }}
+                  className="prev"
+                  onClick={() => changeMonth(-1, 0, 11)}
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </li>
+                <li className="center-item">
+                  <span>
+                    {months[month]}
+                    <br />
+                    {year}
+                  </span>
+                </li>
+                <li
+                  style={{ cursor: "pointer" }}
+                  className="next"
+                  onClick={() => changeMonth(+1, 11, 0)}
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </li>
+              </ul>
+            </div>
+            <ul className="weekdays">
+              {days.map((i, index) => (
+                <li key={index}>{i}</li>
+              ))}
+            </ul>
+            <ul className="days">
+              {daysInCalendar.map((i, index) => (
+                <li key={index}>
+                  <span
+                    className={
+                      day === parseInt(i) &&
+                      year === today.getFullYear() &&
+                      month === today.getMonth()
+                        ? "active"
+                        : null
+                    }
+                  >
+                    {i}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      };
+      /******************************************************************/
+      /******************************************************************/
+      /* Creating Data Context That Contain All Data from Json Links */
+      const DataContext = React.createContext();
+
+      const DataContextProvider = (props) => {
+        const [employeeData, setEmployeeData] = React.useState([]);
+        const [jobsData, setJobsData] = React.useState([]);
+        const [adsData, setAdsData] = React.useState([]);
+        const [newsData, setNewsData] = React.useState([]);
+        const [workLogsData, setWorkLogsData] = React.useState([]);
+        const [isOpen, setIsOpen] = React.useState(false);
+       
+        React.useEffect(() => {
+          const urls = [
+            "https://raw.githubusercontent.com/linkteralab/frontend_developer_assignment/master/data/employees.json",
+            "https://raw.githubusercontent.com/linkteralab/frontend_developer_assignment/master/data/jobs.json",
+            "https://raw.githubusercontent.com/linkteralab/frontend_developer_assignment/master/data/news.json",
+            "https://raw.githubusercontent.com/linkteralab/frontend_developer_assignment/master/data/advertisements.json",
+            "https://raw.githubusercontent.com/linkteralab/frontend_developer_assignment/master/data/work_logs.json",
+          ];
+
+          Promise.all(
+            urls.map((url) =>
+              fetch(url)
+                .then(checkStatus) // check the response of our APIs
+                .then(parseJSON) // parse it to Json
+                .catch((error) => console.log("There was a problem!", error))
+            )
+          ).then((data) => {
+            // assign to requested URL as define in array with array index.
+            const data_employees = data[0];
+            const data_jobs = data[1];
+            const data_news = data[2];
+            const data_advertisements = data[3];
+            const data_work_logs = data[4];
+            setEmployeeData(data_employees);
+            setJobsData(data_jobs);
+            setNewsData(data_news);
+            setAdsData(data_advertisements);
+            setWorkLogsData(data_work_logs);
+          });
+          function checkStatus(response) {
+            if (response.ok) {
+              return Promise.resolve(response);
+            } else {
+              return Promise.reject(new Error(response.statusText));
+            }
+          }
+          function parseJSON(response) {
+            return response.json();
+          }
+        }, []);
+        return (
+          <DataContext.Provider
+            value={{
+              employeeData,
+              jobsData,
+              newsData,
+              adsData,
+              workLogsData,
+              isOpen,
+              setIsOpen
+            }}
+          >
+            {props.children}
+          </DataContext.Provider>
+        );
+      };
+
+      ReactDOM.render(
+        <DataContextProvider>
+          <App />
+        </DataContextProvider>,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>
