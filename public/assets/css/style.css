@@ -281,6 +281,13 @@ h2 {
       -ms-flex-align: center;
           align-items: center;
 }
+.text{
+  color:var(--text-color);
+  font-size: clamp(12px, 1vmin, 2vmin);
+}
+.text:hover{
+  text-decoration: underline;
+}
 .empty-text {
   font-size: clamp(12px, 1vmin, 2vmin);
   text-align: center;

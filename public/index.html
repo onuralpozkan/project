@@ -275,6 +275,10 @@
         person_img_url,
         isBirth,
       }) => {
+        const handleMessage = () => {
+         const prompt =  window.prompt("Mesajınız: ")
+          prompt ? window.alert('Mesajınız İletildi...') : null 
+        }
         return (
           <div className="person-container">
             <div className="avatar-container">
@@ -284,7 +288,7 @@
               <p className="person-name">{person_name}</p>
               <p className="person-mail">{person_mail}</p>
               {isBirth ? (
-                <div className="person-text-container">
+                <div className="person-text-container" style={{cursor:"pointer",}} onClick={handleMessage}>
                   <p className="text">"Doğum Günü Kutlayın..."</p>
                   <span>
                     <img
@@ -306,13 +310,16 @@
         const today = new Date();
         // Filter employees whose birthday is today
         const isBirthday = employeeData.filter((person) => {
+          
           const personBirthDay = new Date(person.birthday);
           if (
-            today.getDate() == personBirthDay.getDate() &&
-            today.getMonth() == personBirthDay.getMonth()
+            //deneme
+            today.getDate() === personBirthDay.getDate() &&
+            today.getMonth() === personBirthDay.getMonth()
           )
             return person;
         });
+        
         // Map Birthday people
         const birthPeople = isBirthday
           .slice(0, whole_data ? isBirthday.length : 4)
@@ -341,8 +348,8 @@
               </h2>
             </div>
             {/*If more than 4 people born today, then it will show more button*/}
-            {birthPeople.length > 4 && !whole_data ? (
-              <>
+            <ul>
+              </ul>
                 <div
                   className="section-content"
                   style={
@@ -356,15 +363,18 @@
                       : null
                   }
                 >
-                  {birthPeople}
-                </div>
-                <ShowMore show_more_link="birthdaypage" />
-              </>
-            ) : (
-              <div className="section-content">
+                  {birthPeople.length === 0 ? <div className="section-content">
                 <p className="empty-text">Bugün Doğan Kimse Yok!</p>
-              </div>
-            )}
+              </div> : birthPeople}
+                </div>
+            
+              {birthPeople.length >= 4 && !whole_data ? (
+              <ShowMore
+                show_more_link="birthdaypage"
+                link_data={birthPeople}
+              />
+            ) : null}
+            
           </section>
         );
       };
